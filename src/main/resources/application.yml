@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: spring-security-server
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${B2C_ISSUER_URI}
+          jwk-set-uri: ${B2C_JWK_SET_URI}
+
+server:
+  port: ${PORT}
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        security: DEBUG
+service:
+  patient:
+    url: ${PATIENT_SERVICE_URL}
+  alert:
+    url: ${ALERT_SERVICE_URL}
