@@ -1,8 +1,6 @@
 package dev.rm.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.rm.model.Alert;
 import dev.rm.model.Patient;
+import dev.rm.model.VitalSign;
 import dev.rm.service.AlertService;
 import dev.rm.service.PatientService;
+import dev.rm.service.VitalSignService;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api")
@@ -22,17 +25,12 @@ public class Controller {
 
     private final PatientService patientService;
     private final AlertService alertService;
+    private final VitalSignService vitalSignService;
 
-    public Controller(PatientService patientService, AlertService alertService) {
+    public Controller(PatientService patientService, AlertService alertService, VitalSignService vitalSignService) {
         this.patientService = patientService;
         this.alertService = alertService;
-    }
-
-    @GetMapping("/hello")
-    public Map<String, String> hello() {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Hello, world! From Server");
-        return response;
+        this.vitalSignService = vitalSignService;
     }
 
     @GetMapping("/patients")
@@ -53,4 +51,23 @@ public class Controller {
         return new ResponseEntity<>(alerts, HttpStatus.OK);
 
     }
+
+    @PostMapping("/vital-signs")
+    public ResponseEntity<VitalSign> createVitalSign(@RequestBody VitalSign vitalSign) {
+        VitalSign newVitalSign = vitalSignService.createVitalSign(vitalSign);
+        return new ResponseEntity<>(newVitalSign, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/vital-signs/patient/{patientId}")
+    public ResponseEntity<List<VitalSign>> getVitalSignsByPatientId(@PathVariable Long patientId) {
+        List<VitalSign> vitalSigns = vitalSignService.getVitalSignsByPatientId(patientId);
+        return new ResponseEntity<>(vitalSigns, HttpStatus.OK);
+    }
+
+    @GetMapping("/vital-signs/{vitalSignId}")
+    public ResponseEntity<VitalSign> getVitalSignById(@PathVariable Long vitalSignId) {
+        VitalSign vitalSign = vitalSignService.getVitalSignById(vitalSignId);
+        return new ResponseEntity<>(vitalSign, HttpStatus.OK);
+    }
+
 }

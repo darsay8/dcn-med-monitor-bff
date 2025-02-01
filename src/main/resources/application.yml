@@ -19,5 +19,7 @@ logging:
 service:
   patient:
     url: ${PATIENT_SERVICE_URL}
+  vital-signs:
+    url: ${VITAL_SIGNS_SERVICE_URL}
   alert:
     url: ${ALERT_SERVICE_URL}
